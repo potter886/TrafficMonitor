@@ -1,17 +1,12 @@
-﻿#pragma once
-#include <Pdh.h>
-#include <PdhMsg.h>
-#include "PdhQuery.h"
+#pragma once
+#include "HybridCpuFrequency.h"
 
-class CPdhCpuFreq : public CPdhQuery
+class CPdhCpuFreq
 {
 public:
     CPdhCpuFreq();
-
-    // 调用此函数获取CPU频率。
-    // 注意：第二次调用此函数开始才能获取到值，两次调用的时间不应过短，最好大于200毫秒
+    // GHz averaged per physical core. The first sample initializes PDH.
     bool GetCpuFreq(float& freq);
-
 private:
-    float max_cpu_freq = 0;
+    HybridCpuFrequency sampler;
 };

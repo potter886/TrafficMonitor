@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Common.h"
 #include "TrafficMonitor.h"
+#include "NetworkSpeedFormat.h"
 
 
 CCommon::CCommon()
@@ -228,7 +229,24 @@ CString CCommon::DataSizeToString(unsigned long long size, const PublicSettingDa
     {
         size *= 8;
     }
-    switch (cfg.speed_unit)
+    if (cfg.three_digit_net_speed)
+    {
+        double value = static_cast<double>(size) / 1024.0;
+        unsigned unit = 0;
+        if (cfg.speed_unit == SpeedUnit::AUTO) {
+            const auto scaled = NetworkSpeedFormat::Automatic(static_cast<double>(size));
+            value = scaled.value;
+            unit = scaled.unit;
+        }
+        else if (cfg.speed_unit == SpeedUnit::MBPS) { value /= 1024.0; unit = 1; }
+        const wchar_t* units[] = {L"K", L"M", L"G", L"T"};
+        value_str = NetworkSpeedFormat::ThreeSignificantDigits(value).c_str();
+        if (!cfg.hide_unit || cfg.speed_unit == SpeedUnit::AUTO) {
+            unit_str = units[unit];
+            if (!cfg.speed_short_mode) unit_str += L"B";
+        }
+    }
+    else switch (cfg.speed_unit)
     {
     case SpeedUnit::AUTO:
         if (cfg.speed_short_mode)

@@ -826,6 +826,8 @@
     <ClInclude Include="OptionsDlg.h" />
     <ClInclude Include="PdhHardwareQuery\CPUUsage.h" />
     <ClInclude Include="PdhHardwareQuery\CpuFreq.h" />
+    <ClInclude Include="PdhHardwareQuery\HybridCpuFrequency.h" />
+    <ClInclude Include="NetworkSpeedFormat.h" />
     <ClInclude Include="PdhHardwareQuery\GpuUsage.h" />
     <ClInclude Include="PdhHardwareQuery\DiskUsage.h" />
     <ClInclude Include="PdhHardwareQuery\PdhQuery.h" />

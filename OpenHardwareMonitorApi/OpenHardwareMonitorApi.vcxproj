@@ -29,6 +29,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0A42F4A-ABB3-4575-B4D5-CEDD8379AC26}</ProjectGuid>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LibreHardwareMonitorDir Condition="'$(LibreHardwareMonitorDir)'==''">$(MSBuildThisFileDirectory)..\.deps\LibreHardwareMonitor</LibreHardwareMonitorDir>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>OpenHardwareMonitorApi</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
@@ -197,7 +198,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="LibreHardwareMonitorLib">
-      <HintPath>LibreHardwareMonitorLib.dll</HintPath>
+      <HintPath>$(LibreHardwareMonitorDir)\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

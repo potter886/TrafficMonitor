@@ -330,7 +330,15 @@ CString CommonDisplayItem::GetItemValueSampleText(bool is_main_window) const
         {
             wstring digits(theApp.m_taskbar_data.digits_number, L'8');      //根据数据位数生成指定个数的“8”
             bool hide_unit{ theApp.m_taskbar_data.hide_unit && theApp.m_taskbar_data.speed_unit != SpeedUnit::AUTO };
-            if (theApp.m_taskbar_data.speed_short_mode)
+            if (theApp.m_taskbar_data.three_digit_net_speed)
+            {
+                // A stable width for up to three significant digits, with at
+                // most two decimal places. Never size this from live values.
+                if (hide_unit) sample_str = L"88.8";
+                else if (theApp.m_taskbar_data.speed_short_mode) sample_str = L"88.8M/s";
+                else sample_str = L"88.8MB/s";
+            }
+            else if (theApp.m_taskbar_data.speed_short_mode)
             {
                 if (hide_unit)
                     sample_str.Format(_T("%s."), digits.c_str());

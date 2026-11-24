@@ -227,6 +227,7 @@ void CTrafficMonitorApp::LoadConfig()
     m_taskbar_data.separate_value_unit_with_space = ini.GetBool(_T("task_bar"), _T("separate_value_unit_with_space"), true);
     m_taskbar_data.show_tool_tip = ini.GetBool(_T("task_bar"), _T("show_tool_tip"), true);
     m_taskbar_data.digits_number = ini.GetInt(_T("task_bar"), _T("digits_number"), 4);
+    m_taskbar_data.three_digit_net_speed = ini.GetBool(L"task_bar", L"three_digit_net_speed", false);
     m_taskbar_data.memory_display = static_cast<MemoryDisplay>(ini.GetInt(L"task_bar", L"memory_display", static_cast<int>(MemoryDisplay::USAGE_PERCENTAGE)));
     m_taskbar_data.double_click_action = static_cast<DoubleClickAction>(ini.GetInt(_T("task_bar"), _T("double_click_action"), 0));
     m_taskbar_data.double_click_exe = ini.GetString(L"task_bar", L"double_click_exe", (theApp.m_system_dir + L"\\Taskmgr.exe").c_str());
@@ -394,6 +395,7 @@ void CTrafficMonitorApp::SaveConfig()
     ini.WriteBool(L"task_bar", L"separate_value_unit_with_space", m_taskbar_data.separate_value_unit_with_space);
     ini.WriteBool(L"task_bar", L"show_tool_tip", m_taskbar_data.show_tool_tip);
     ini.WriteInt(L"task_bar", L"digits_number", m_taskbar_data.digits_number);
+    ini.WriteBool(L"task_bar", L"three_digit_net_speed", m_taskbar_data.three_digit_net_speed);
     ini.WriteInt(L"task_bar", L"memory_display", static_cast<int>(m_taskbar_data.memory_display));
     ini.WriteInt(L"task_bar", L"double_click_action", static_cast<int>(m_taskbar_data.double_click_action));
     ini.WriteString(L"task_bar", L"double_click_exe", m_taskbar_data.double_click_exe);

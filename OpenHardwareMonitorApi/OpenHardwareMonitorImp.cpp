@@ -127,15 +127,19 @@ namespace OpenHardwareMonitorApi
     }
 
     bool COpenHardwareMonitor::GetCPUFreq(IHardware^ hardware, float& freq) {
+        m_all_cpu_clock.clear();
+        freq = -1;
         for (int i = 0; i < hardware->Sensors->Length; i++)
         {
             if (hardware->Sensors[i]->SensorType == SensorType::Clock)
             {
                 String^ name = hardware->Sensors[i]->Name;
-                if (name != L"Bus Speed")
-                    m_all_cpu_clock[ClrStringToStdWstring(name)] = Convert::ToDouble(hardware->Sensors[i]->Value);
+                if (name != L"Bus Speed" && hardware->Sensors[i]->Value.HasValue)
+                    m_all_cpu_clock[ClrStringToStdWstring(name)] = hardware->Sensors[i]->Value.Value;
             }
         }
+        if (m_all_cpu_clock.empty())
+            return false;
         float sum{};
         for (auto i : m_all_cpu_clock)
             sum += i.second;
@@ -221,13 +225,27 @@ namespace OpenHardwareMonitorApi
             if (hardware->Sensors[i]->SensorType == SensorType::Temperature)
             {
                 String^ name = hardware->Sensors[i]->Name;
-                //保存每个CPU传感器的温度
-                m_all_cpu_temperature[ClrStringToStdWstring(name)] = Convert::ToDouble(hardware->Sensors[i]->Value);
+                // Missing values are unavailable, not zero degrees. Distance to
+                // TjMax is a temperature margin, not a measured temperature.
+                if (hardware->Sensors[i]->Value.HasValue && !name->Contains(L"Distance to TjMax"))
+                    m_all_cpu_temperature[ClrStringToStdWstring(name)] = hardware->Sensors[i]->Value.Value;
             }
         }
         //计算平均温度
         if (!m_all_cpu_temperature.empty())
         {
+            auto average = m_all_cpu_temperature.find(L"Core Average");
+            if (average != m_all_cpu_temperature.end())
+            {
+                temperature = average->second;
+                return true;
+            }
+            auto package = m_all_cpu_temperature.find(L"CPU Package");
+            if (package != m_all_cpu_temperature.end())
+            {
+                temperature = package->second;
+                return true;
+            }
             float sum{};
             for (const auto& item : m_all_cpu_temperature)
                 sum += item.second;
@@ -299,6 +317,7 @@ namespace OpenHardwareMonitorApi
         m_gpu_ati_usage = -1;
         m_gpu_intel_usage = -1;
         m_all_hdd_temperature.clear();
+        m_all_cpu_temperature.clear();
         m_all_hdd_usage.clear();
         m_cpu_freq = -1;
         m_cpu_usage = -1;
